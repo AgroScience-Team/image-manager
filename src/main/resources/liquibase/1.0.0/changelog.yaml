@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2024-07-16_01-create-tables
+      author: asavershin
+      changes:
+        - sqlFile:
+            path: 2024-07-16_01-create-tables.sql
+            relativeToChangelogFile: true
+
