@@ -4,9 +4,9 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: "jdbc:postgresql://${APP_POSTGRESQL_HOST}:${APP_POSTGRESQL_PORT}/${APP_POSTGRESQL_NAME}?currentSchema=imagemanager"
-    username: ${APP_POSTGRESQL_USER}
-    password: ${APP_POSTGRESQL_PASSWORD}
+    url: jdbc:postgresql://${HOST_DB}:${PORT_DB}/${POSTGRES_DB}?currentSchema=${POSTGRES_SCHEMA}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
   liquibase:
     change-log: liquibase/changelog.yaml
 
@@ -26,5 +26,5 @@ spring.kafka:
     enabled: ${KAFKA_JAAS_ENABLED:true}
     login-module: org.apache.kafka.common.security.plain.PlainLoginModule
     options:
-      username: ${APP_KAFKA_USER:kafka}
-      password: ${APP_KAFKA_PASSWORD:password123}
+      username: ${KAFKA_USER:kafka}
+      password: ${KAFKA_PASSWORD:password123}

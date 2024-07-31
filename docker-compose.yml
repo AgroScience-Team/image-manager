@@ -1,0 +1,22 @@
+networks:
+  kafka-net:
+    name: kafka-net
+    driver: bridge
+  images-manager-net:
+    name: images-manager-net
+    driver: bridge
+
+services:
+
+  backend-images-manager:
+    container_name: backend-images-manager
+    networks:
+      - kafka-net
+      - images-manager-net
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8081:8081
+    env_file:
+      - local/.env

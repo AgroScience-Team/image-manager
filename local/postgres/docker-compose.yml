@@ -1,0 +1,21 @@
+networks:
+  images-manager-net:
+    name: images-manager-net
+    driver: bridge
+
+services:
+
+  db-images-manager:
+    networks:
+      - images-manager-net
+    image: postgres:15.1-alpine
+    container_name: db-images-manager
+    env_file:
+      - ../.env
+    ports:
+      - 5440:5432
+    volumes:
+      - db-images-manager-data:/var/lib/postgresql/data/
+
+volumes:
+  db-images-manager-data:
