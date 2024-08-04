@@ -2,7 +2,6 @@ package com.github.agroscienceteam.imagemanager.configs;
 
 import java.util.Properties;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
@@ -12,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @Data
-@Slf4j
 public class KafkaConf {
 
   @Value("${spring.kafka.bootstrap-servers}")

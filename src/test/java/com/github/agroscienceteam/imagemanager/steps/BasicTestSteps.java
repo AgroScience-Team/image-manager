@@ -16,11 +16,9 @@ import io.cucumber.java.en.When;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.springframework.kafka.core.KafkaTemplate;
 
-@Slf4j
 @RequiredArgsConstructor
 public class BasicTestSteps {
 
