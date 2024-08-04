@@ -22,9 +22,22 @@ spring.kafka:
   properties:
     sasl:
       mechanism: PLAIN
+
   jaas:
     enabled: ${KAFKA_JAAS_ENABLED:true}
     login-module: org.apache.kafka.common.security.plain.PlainLoginModule
     options:
       username: ${KAFKA_USER:kafka}
       password: ${KAFKA_PASSWORD:password123}
+
+springdoc:
+  swagger-ui:
+    path: /docs
+
+app:
+  new-photos:
+    name: ${NEW_PHOTOS:new.photos}
+    group-id: ${NEW_PHOTOS_GROUP_ID:new.photos.group.id}
+
+  partitions: ${PARTITIONS:1}
+  replicas: ${REPLICAS:1}
