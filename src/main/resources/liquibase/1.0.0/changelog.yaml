@@ -1,9 +1,17 @@
 databaseChangeLog:
   - changeSet:
-      id: 2024-07-16_01-create-tables
+      id: 2024-07-31_01-create-tables
       author: asavershin
       changes:
         - sqlFile:
-            path: 2024-07-16_01-create-tables.sql
+            path: 2024-07-31_01-create-tables.sql
             relativeToChangelogFile: true
+  - changeSet:
+      id: 2024-08-01_02-insert-ndvi
+      author: asavershin
+      changes:
+        - sqlFile:
+            path: 2024-08-01_02-insert-ndvi.sql
+            relativeToChangelogFile: true
+
 
