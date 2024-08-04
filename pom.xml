@@ -27,6 +27,9 @@
     <cucumber.version>7.18.1</cucumber.version>
     <jooq.version>3.19.3</jooq.version>
     <org.projectlombok.version>1.18.30</org.projectlombok.version>
+    <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
+    <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+    <springdoc.starter.version>2.1.0</springdoc.starter.version>
   </properties>
 
   <dependencies>
@@ -43,6 +46,11 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+      <version>${springdoc.starter.version}</version>
     </dependency>
 
     <!-- Other dependencies -->
@@ -90,6 +98,16 @@
       <artifactId>lombok</artifactId>
       <version>${org.projectlombok.version}</version>
       <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct</artifactId>
+      <version>${org.mapstruct.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok-mapstruct-binding</artifactId>
+      <version>${lombok-mapstruct-binding.version}</version>
     </dependency>
     <!-- Other dependencies -->
 
@@ -186,6 +204,77 @@
             <version>${puppycrawl.tools.checkstyle.version}</version>
           </dependency>
         </dependencies>
+      </plugin>
+
+      <plugin>
+        <groupId>org.jooq</groupId>
+        <artifactId>jooq-codegen-maven</artifactId>
+        <version>${jooq.version}</version>
+        <executions>
+          <execution>
+            <id>generate-jooq-sources</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <generator>
+                <database>
+                  <name>org.jooq.meta.extensions.ddl.DDLDatabase</name>
+                  <properties>
+                    <property>
+                      <key>scripts</key>
+                      <value>src/main/resources/liquibase/**/*create*.sql</value>
+                    </property>
+                    <property>
+                      <key>sort</key>
+                      <value>semantic</value>
+                    </property>
+                    <property>
+                      <key>unqualifiedSchema</key>
+                      <value>none</value>
+                    </property>
+                    <property>
+                      <key>defaultNameCase</key>
+                      <value>lower</value>
+                    </property>
+                  </properties>
+                </database>
+                <target>
+                  <packageName>asavershin.generated.package</packageName>
+                  <directory>target/generated-sources/jooq</directory>
+                </target>
+              </generator>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok-mapstruct-binding</artifactId>
+              <version>${lombok-mapstruct-binding.version}</version>
+            </path>
+            <path>
+              <groupId>org.mapstruct</groupId>
+              <artifactId>mapstruct-processor</artifactId>
+              <version>${org.mapstruct.version}</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
       </plugin>
 
       <plugin>
