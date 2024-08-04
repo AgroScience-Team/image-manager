@@ -15,12 +15,14 @@ import org.apache.kafka.clients.admin.ListTopicsResult;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 @Data
 @Slf4j
+@DependsOn("photoRepositoryImpl")
 public class TopicsInitializer implements CommandLineRunner {
 
   @NonNull
