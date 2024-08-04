@@ -1,4 +1,4 @@
-package com.github.agroscienceteam.imagemanager.infra.in;
+package com.github.agroscienceteam.imagemanager.infra.input;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.agroscienceteam.imagemanager.domain.EventsListener;

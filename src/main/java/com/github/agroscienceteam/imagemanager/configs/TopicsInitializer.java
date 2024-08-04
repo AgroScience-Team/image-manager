@@ -15,7 +15,6 @@ import org.apache.kafka.clients.admin.ListTopicsResult;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -26,7 +25,8 @@ public class TopicsInitializer implements CommandLineRunner {
 
   @NonNull
   private final AdminClient adminClient;
-  private final List<String> topics = List.of("ndvi");
+  @NonNull
+  private final PhotoRepository repo;
   @Value("${app.partitions}")
   private int partitions;
   @Value("${app.replicas}")
@@ -43,6 +43,7 @@ public class TopicsInitializer implements CommandLineRunner {
     try {
       ListTopicsResult listTopicsResult = adminClient.listTopics();
       Set<String> existingTopics = listTopicsResult.names().get();
+      List<String> topics = repo.findAllIndexes();
       List<NewTopic> newTopics = new LinkedList<>();
       for (String topic : topics) {
         if (!existingTopics.contains(topic)) {
