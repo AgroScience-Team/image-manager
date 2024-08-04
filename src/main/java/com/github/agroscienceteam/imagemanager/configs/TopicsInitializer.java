@@ -22,7 +22,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Data
 @Slf4j
-@DependsOn("photoRepositoryImpl")
 public class TopicsInitializer implements CommandLineRunner {
 
   @NonNull
