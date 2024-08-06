@@ -1,30 +1,28 @@
 package com.github.agroscienceteam.imagemanager.steps;
 
-import static com.github.agroscienceteam.imagemanager.steps.Constants.tables;
 import static java.util.stream.Collectors.toMap;
 
 import com.github.agroscienceteam.imagemanager.listeners.TestListener;
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@RequiredArgsConstructor
 public class BackgroundSteps {
 
   @NonNull
-  private final DSLContext dsl;
+  @Autowired
+  private TestRepo repo;
 
   private Map<String, TestListener> listeners;
 
   @Given("Table {string} is empty")
   public void givenDbTableIsClear(String tableName) {
-    delete(tableName);
+    repo.delete(tableName);
   }
 
   @And("Kafka topic {string} is clear")
@@ -34,15 +32,17 @@ public class BackgroundSteps {
 
   @And("Table {string} is empty too")
   public void andDbTableIsClear(String tableName) {
-    delete(tableName);
+    repo.delete(tableName);
   }
 
-  private void delete(String tableName) {
-    dsl.delete(tables.get(tableName)).execute();
+  @And("Db table {string} contains data:")
+  public void dbTableContainsData(String tableName, DataTable dt) {
+    repo.save(dt.asMaps(), tableName);
   }
 
   @Autowired
   public void setListeners(List<TestListener> listeners) {
     this.listeners = listeners.stream().collect(toMap(TestListener::getTopic, Function.identity()));
   }
+
 }
