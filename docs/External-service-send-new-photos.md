@@ -29,6 +29,4 @@ Example
 ```
 
 ## [Тест](../src/test/resources/features/scenery-external-service-send-new-photos.feature)
-Получает сообщения, проверяет их успешность сохранения в бд и успешную отправку воркерам.  
-При последующем добавлении новых индексов в таблицу [indexes](../src/main/resources/liquibase/1.0.0/2024-07-31_01-create-tables.sql)
-нужно продублировать новый индекс в списке класса [Initializer](../src/test/java/com/github/agroscienceteam/imagemanager/Initializer.java). 
+Получает сообщения, проверяет их успешность сохранения в бд и успешную отправку воркерам. 
