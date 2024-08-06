@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-@Slf4j
 public class PhotoRepositoryImpl implements PhotoRepository {
 
   @NonNull
@@ -36,7 +34,6 @@ public class PhotoRepositoryImpl implements PhotoRepository {
 
   @Override
   public <T> void save(T entity) {
-    log.info("SAVING {}", mapper.map(entity, tables.get(entity.getClass()).getType()).toString());
     dsl.executeInsert(mapper.map(entity, tables.get(entity.getClass()).getType()));
   }
 

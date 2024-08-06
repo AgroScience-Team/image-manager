@@ -6,14 +6,12 @@ import com.github.agroscienceteam.imagemanager.domain.PhotoRepository;
 import com.github.agroscienceteam.imagemanager.domain.ProcessedPhoto;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class WorkersResultsListener implements EventsListener<ConsumerRecord<String, String>> {
 
   private final ObjectMapper mapper;
@@ -27,7 +25,6 @@ public class WorkersResultsListener implements EventsListener<ConsumerRecord<Str
   @Override
   @SneakyThrows
   public void receive(ConsumerRecord<String, String> message) {
-    log.info("START_RECEIVING {}, {}", message.key(), message.value());
     ProcessedPhotoDTO dto = mapper.readValue(message.value(), ProcessedPhotoDTO.class);
     repo.save(new ProcessedPhoto(message.key(), dto.photoId(), dto.result()));
   }
