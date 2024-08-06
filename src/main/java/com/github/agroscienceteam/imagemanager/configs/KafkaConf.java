@@ -44,4 +44,12 @@ public class KafkaConf {
     return new NewTopic(topic, partitions, replicas);
   }
 
+  @Bean
+  public NewTopic workersResults(
+          final @Value("${app.workers-results.name}") String topic,
+          final @Value("${app.partitions}") int partitions,
+          final @Value("${app.replicas}") short replicas) {
+    return new NewTopic(topic, partitions, replicas);
+  }
+
 }

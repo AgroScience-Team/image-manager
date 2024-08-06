@@ -1,8 +1,8 @@
 package com.github.agroscienceteam.imagemanager.domain;
 
 @FunctionalInterface
-public interface EventsListener {
+public interface EventsListener<T> {
 
-  void receive(String message);
+  void receive(T message);
 
 }
