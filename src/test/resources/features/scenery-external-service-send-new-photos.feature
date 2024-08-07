@@ -4,6 +4,10 @@ Feature: scenery-external-service-send-new-photos
   Background:
     Given Table "photos" is empty
     And Kafka topic "ndvi" is clear
+    And Table "photos_indexes" is empty
+    And Db table "indexes" contains data:
+      | indexName |
+      | ndvi      |
 
   Scenario: Receive and distribute info for workers
     When External system send message in topic "new.photos"

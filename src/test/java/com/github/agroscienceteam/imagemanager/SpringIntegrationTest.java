@@ -13,7 +13,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
 @CucumberContextConfiguration
-@SpringBootTest(classes = Application.class)
+@SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(locations = {"classpath:application.yml", "classpath:config/application.test.yml"})
 @AutoConfigureEmbeddedDatabase(type = POSTGRES, provider = ZONKY)
 @EmbeddedKafka(partitions = 1, brokerProperties = {"listeners=PLAINTEXT://localhost:9393", "port=9393"}, zookeeperPort = 2183)
