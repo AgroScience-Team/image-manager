@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface PhotoRepository {
 
-  void save(Photo photo);
+  <T> void save(T photo);
 
   List<String> findAllIndexes();
 

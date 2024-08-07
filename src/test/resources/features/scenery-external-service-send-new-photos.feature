@@ -21,14 +21,6 @@ Feature: scenery-external-service-send-new-photos
     f128f7c6-1972-4a15-99b7-bca1e1675fdf
     """
 
-    And Table "photos" contains data
-    """
-    [
-      {
-        "photoId": "f128f7c6-1972-4a15-99b7-bca1e1675fdf",
-        "fieldId": 0,
-        "photoDate": "2024-08-02",
-        "photoExtension": "TIFF"
-      }
-    ]
-    """
+    Then Table "photos" receive data in 1000 millis
+      | photoId                              | fieldId | photoDate  | photoExtension |
+      | f128f7c6-1972-4a15-99b7-bca1e1675fdf | 0       | 2024-08-02 | TIFF           |

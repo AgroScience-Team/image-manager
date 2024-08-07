@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class NewPhotoListener implements EventsListener {
+public class NewPhotoListener implements EventsListener<String> {
 
   @NonNull
   private final ObjectMapper mapper;

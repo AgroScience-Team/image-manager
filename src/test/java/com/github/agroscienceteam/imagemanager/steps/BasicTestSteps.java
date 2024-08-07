@@ -6,17 +6,16 @@ import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import com.github.agroscienceteam.imagemanager.domain.Photo;
 import com.github.agroscienceteam.imagemanager.domain.PhotoRepository;
 import com.github.agroscienceteam.imagemanager.listeners.TestListener;
-import com.github.agroscienceteam.imagemanager.mappers.JsonTestMapper;
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.jooq.DSLContext;
+import org.modelmapper.ModelMapper;
 import org.springframework.kafka.core.KafkaTemplate;
 
 @RequiredArgsConstructor
@@ -25,13 +24,18 @@ public class BasicTestSteps {
   private final KafkaTemplate<String, String> producer;
   private final PhotoRepository repo;
   private final List<TestListener> listeners;
-  private final JsonTestMapper mapper;
-  private final DSLContext dsl;
+  private final TestRepo testRepo;
+  private final ModelMapper mapper;
 
 
   @When("External system send message in topic {string}")
   public void sendMessage(String topic, String message) {
     producer.send(topic, message);
+  }
+
+  @When("External system send message in topic {string} with key {string}")
+  public void sendMessage(String topic, String key, String message) {
+    producer.send(topic, key, message);
   }
 
   @SneakyThrows
@@ -53,11 +57,14 @@ public class BasicTestSteps {
   }
 
   @SneakyThrows
-  @And("Table {string} contains data")
-  public void dbTest(String tableName, String messages) {
-    var expected = mapper.parseList(messages, Photo.class);
-    var actual = dsl.select().from(tables.get(tableName)).fetchInto(Photo.class);
-    assertEquals(expected, actual);
+  @And("Table {string} receive data in {long} millis")
+  public void dbTest(String tableName, long time,  DataTable dt) {
+    var expected = dt.asMaps().stream().map(m -> mapper.map(m, tables.get(tableName).getRecordType())).toList();
+    await().atMost(time, MILLISECONDS)
+            .untilAsserted(() -> {
+              var actual = testRepo.getData(tableName);
+              assertEquals(expected, actual);
+            });
   }
 
 }

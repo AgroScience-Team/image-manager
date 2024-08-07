@@ -38,6 +38,9 @@ app:
   new-photos:
     name: ${NEW_PHOTOS:new.photos}
     group-id: ${NEW_PHOTOS_GROUP_ID:new.photos.group.id}
+  workers-results:
+    name: ${WORKERS_RESULTS:workers.results}
+    group-id: ${WORKERS_RESULTS_GROUP_ID:workers.results.group.id}
 
   partitions: ${PARTITIONS:1}
   replicas: ${REPLICAS:1}

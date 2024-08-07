@@ -25,7 +25,7 @@ CREATE TABLE photos_indexes
 (
     photo_id   UUID,
     index_name VARCHAR,
-    status     VARCHAR,
+    result     VARCHAR,
     CONSTRAINT fk_photos_indexes_photos
         FOREIGN KEY (photo_id)
             REFERENCES photos (photo_id) ON UPDATE RESTRICT ON DELETE SET NULL,
@@ -37,6 +37,6 @@ CREATE TABLE photos_indexes
 COMMENT ON TABLE photos_indexes IS 'Таблица для many-to-many связи';
 COMMENT ON COLUMN photos_indexes.photo_id IS 'Ссылка на фотографию';
 COMMENT ON COLUMN photos_indexes.index_name IS 'Название индекса';
-COMMENT ON COLUMN photos_indexes.status IS 'Статус индекса: успешный или завершён с ошибкой';
+COMMENT ON COLUMN photos_indexes.result IS 'Статус индекса: успешный или завершён с ошибкой';
 
 commit;
