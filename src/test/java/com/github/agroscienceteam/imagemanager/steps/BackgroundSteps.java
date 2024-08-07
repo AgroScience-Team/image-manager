@@ -30,13 +30,9 @@ public class BackgroundSteps {
     listeners.get(topic).clear();
   }
 
-  @And("Table {string} is empty too")
-  public void andDbTableIsClear(String tableName) {
-    repo.delete(tableName);
-  }
-
   @And("Db table {string} contains data:")
   public void dbTableContainsData(String tableName, DataTable dt) {
+    repo.delete(tableName);
     repo.save(dt.asMaps(), tableName);
   }
 

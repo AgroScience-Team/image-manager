@@ -7,6 +7,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.github.agroscienceteam.imagemanager.domain.PhotoRepository;
+import com.github.agroscienceteam.imagemanager.infra.input.PhotoController;
 import com.github.agroscienceteam.imagemanager.listeners.TestListener;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
