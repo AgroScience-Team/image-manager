@@ -14,8 +14,8 @@ import lombok.NonNull;
  * @param photoExtension extension like TIFF, BIL, etc
  */
 public record Photo(@NonNull UUID photoId,
-                    @NonNull @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) Long fieldId,
-                    @NonNull @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) LocalDate photoDate,
+                    @NonNull Long fieldId,
+                    @NonNull LocalDate photoDate,
                     @NonNull String photoExtension) {
 
 }

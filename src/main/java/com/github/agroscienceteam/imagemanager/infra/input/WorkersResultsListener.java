@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.agroscienceteam.imagemanager.domain.EventsListener;
 import com.github.agroscienceteam.imagemanager.domain.PhotoRepository;
 import com.github.agroscienceteam.imagemanager.domain.ProcessedPhoto;
+import com.github.agroscienceteam.imagemanager.infra.input.dto.ProcessedPhotoDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -26,7 +27,7 @@ public class WorkersResultsListener implements EventsListener<ConsumerRecord<Str
   @SneakyThrows
   public void receive(ConsumerRecord<String, String> message) {
     ProcessedPhotoDTO dto = mapper.readValue(message.value(), ProcessedPhotoDTO.class);
-    repo.save(new ProcessedPhoto(message.key(), dto.photoId(), dto.result()));
+    repo.save(new ProcessedPhoto(message.key(), dto.photoId(), dto.result(), dto.extension()));
   }
 
 }
