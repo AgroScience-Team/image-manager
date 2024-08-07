@@ -5,6 +5,7 @@
 # Сценарии
 1) [Внешняя система отправляет сообщения в топик new.photos](docs/External-service-send-new-photos.md)
 2) [Воркеры отправляют результат своей деятельности в топик workers.results](docs/Workers-send-results.md)
+3) [UI делает запрос на получение метаинфорормации снимков](docs/Ui-try-to-get-photos-metainfo.md)
 
 # Важное
 При последующем добавлении нового индекса в таблицу [indexes](src/main/resources/liquibase/1.0.0/2024-07-31_01-create-tables.sql)  

@@ -1,4 +1,4 @@
-# External-service-send-new-photos
+# Workers-send-results
 В топик workers.results приходят сообщения вида:
 ```
 key: string
