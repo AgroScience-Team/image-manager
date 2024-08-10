@@ -19,8 +19,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomPhotoMapper {
 
-  public List<PhotoWithProcessedPhotos> map(Result<Record> rec) {
-    Map<UUID, List<Record>> groupedByPhotoId = rec.stream()
+  public List<PhotoWithProcessedPhotos> map(Result<Record> res) {
+    Map<UUID, List<Record>> groupedByPhotoId = res.stream()
             .collect(Collectors.groupingBy(
                     r -> r.get(PHOTOS.PHOTO_ID),
                     LinkedHashMap::new,
