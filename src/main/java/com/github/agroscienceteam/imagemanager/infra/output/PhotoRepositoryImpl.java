@@ -5,10 +5,10 @@ import static asavershin.generated.package_.Tables.PHOTOS;
 import static asavershin.generated.package_.Tables.PHOTOS_INDEXES;
 import static asavershin.generated.package_.tables.Indexes.INDEXES;
 
-import com.github.agroscienceteam.imagemanager.domain.Photo;
-import com.github.agroscienceteam.imagemanager.domain.PhotoRepository;
-import com.github.agroscienceteam.imagemanager.domain.PhotoWithProcessedPhotos;
-import com.github.agroscienceteam.imagemanager.domain.ProcessedPhoto;
+import com.github.agroscienceteam.imagemanager.domain.photo.Photo;
+import com.github.agroscienceteam.imagemanager.domain.photo.PhotoRepository;
+import com.github.agroscienceteam.imagemanager.domain.photo.PhotoWithProcessedPhotos;
+import com.github.agroscienceteam.imagemanager.domain.photo.ProcessedPhoto;
 import com.github.agroscienceteam.imagemanager.infra.mappers.CustomPhotoMapper;
 import java.time.LocalDate;
 import java.util.List;

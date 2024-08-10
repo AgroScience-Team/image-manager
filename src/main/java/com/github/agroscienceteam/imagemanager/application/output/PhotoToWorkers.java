@@ -2,7 +2,7 @@ package com.github.agroscienceteam.imagemanager.application.output;
 
 import com.github.agroscienceteam.imagemanager.configs.annotations.Command;
 import com.github.agroscienceteam.imagemanager.domain.EventSender;
-import com.github.agroscienceteam.imagemanager.domain.Photo;
+import com.github.agroscienceteam.imagemanager.domain.photo.Photo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 

@@ -32,7 +32,8 @@ CREATE TABLE photos_indexes
             REFERENCES photos (photo_id) ON UPDATE RESTRICT ON DELETE SET NULL,
     CONSTRAINT fk_photo_indexes_indexes
         FOREIGN KEY (index_name)
-            REFERENCES indexes (index_name) ON UPDATE RESTRICT ON DELETE SET NULL
+            REFERENCES indexes (index_name) ON UPDATE RESTRICT ON DELETE SET NULL,
+    CONSTRAINT unique_photos_indexes UNIQUE (photo_id, index_name, result, extension)
 );
 
 COMMENT ON TABLE photos_indexes IS 'Таблица для many-to-many связи';

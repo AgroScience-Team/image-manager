@@ -1,6 +1,5 @@
-package com.github.agroscienceteam.imagemanager.domain;
+package com.github.agroscienceteam.imagemanager.domain.photo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import java.util.UUID;
 import lombok.NonNull;

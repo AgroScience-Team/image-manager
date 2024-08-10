@@ -1,4 +1,4 @@
-package com.github.agroscienceteam.imagemanager.domain;
+package com.github.agroscienceteam.imagemanager.domain.photo;
 
 import com.github.agroscienceteam.imagemanager.configs.annotations.DomainService;
 import lombok.RequiredArgsConstructor;

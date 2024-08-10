@@ -3,9 +3,9 @@ package com.github.agroscienceteam.imagemanager.infra.mappers;
 import static asavershin.generated.package_.Tables.PHOTOS;
 import static asavershin.generated.package_.Tables.PHOTOS_INDEXES;
 
-import com.github.agroscienceteam.imagemanager.domain.Photo;
-import com.github.agroscienceteam.imagemanager.domain.PhotoWithProcessedPhotos;
-import com.github.agroscienceteam.imagemanager.domain.ProcessedPhoto;
+import com.github.agroscienceteam.imagemanager.domain.photo.Photo;
+import com.github.agroscienceteam.imagemanager.domain.photo.PhotoWithProcessedPhotos;
+import com.github.agroscienceteam.imagemanager.domain.photo.ProcessedPhoto;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -19,8 +19,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomPhotoMapper {
 
-  public List<PhotoWithProcessedPhotos> map(Result<Record> rec) {
-    Map<UUID, List<Record>> groupedByPhotoId = rec.stream()
+  public List<PhotoWithProcessedPhotos> map(Result<Record> res) {
+    Map<UUID, List<Record>> groupedByPhotoId = res.stream()
             .collect(Collectors.groupingBy(
                     r -> r.get(PHOTOS.PHOTO_ID),
                     LinkedHashMap::new,
@@ -41,11 +41,11 @@ public class CustomPhotoMapper {
       );
 
       List<ProcessedPhoto> processedPhotos = records.stream()
-              .map(record -> new ProcessedPhoto(
-                      record.get(PHOTOS_INDEXES.INDEX_NAME),
-                      record.get(PHOTOS.PHOTO_ID),
-                      record.get(PHOTOS_INDEXES.RESULT),
-                      record.get(PHOTOS_INDEXES.EXTENSION)
+              .map(rec -> new ProcessedPhoto(
+                      rec.get(PHOTOS_INDEXES.INDEX_NAME),
+                      rec.get(PHOTOS.PHOTO_ID),
+                      rec.get(PHOTOS_INDEXES.RESULT),
+                      rec.get(PHOTOS_INDEXES.EXTENSION)
               ))
               .toList();
 

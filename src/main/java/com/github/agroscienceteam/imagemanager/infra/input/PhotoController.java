@@ -1,8 +1,10 @@
 package com.github.agroscienceteam.imagemanager.infra.input;
 
-import com.github.agroscienceteam.imagemanager.domain.PhotoRepository;
-import com.github.agroscienceteam.imagemanager.domain.PhotoWithProcessedPhotos;
+import com.github.agroscienceteam.imagemanager.configs.annotations.Audit;
+import com.github.agroscienceteam.imagemanager.domain.photo.PhotoRepository;
+import com.github.agroscienceteam.imagemanager.domain.photo.PhotoWithProcessedPhotos;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.constraints.Min;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.NonNull;
@@ -23,7 +25,8 @@ public class PhotoController {
 
   @GetMapping("/{fieldId}")
   @Operation(description = "Получить метаинформацию снимков")
-  public List<PhotoWithProcessedPhotos> getPhotosMetaInfo(@NonNull final @PathVariable Long fieldId,
+  @Audit
+  public List<PhotoWithProcessedPhotos> getPhotosMetaInfo(@NonNull final @PathVariable @Min(0) Long fieldId,
                                                           @NonNull final @RequestParam LocalDate from,
                                                           @NonNull final @RequestParam LocalDate to) {
     return repo.findByFieldId(fieldId, from, to);

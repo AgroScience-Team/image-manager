@@ -20,7 +20,7 @@ key: ndvi
 а value несёт нужную метаинфу
 
 1) Сообщение читается слушателем событий [WorkersResultsListener](../src/main/java/com/github/agroscienceteam/imagemanager/infra/input/WorkersResultsListener.java)
-2) В базу данных сохраняется сущность [ProcessedPhoto](../src/main/java/com/github/agroscienceteam/imagemanager/domain/ProcessedPhoto.java)
+2) В базу данных сохраняется сущность [ProcessedPhoto](../src/main/java/com/github/agroscienceteam/imagemanager/domain/photo/ProcessedPhoto.java)
 
 ## [Тест](../src/test/resources/features/workers-send-results.feature)
 Получает сообщения, проверяет их успешность сохранения в бд.

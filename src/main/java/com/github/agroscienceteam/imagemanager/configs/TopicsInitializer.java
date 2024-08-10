@@ -1,6 +1,6 @@
 package com.github.agroscienceteam.imagemanager.configs;
 
-import com.github.agroscienceteam.imagemanager.domain.PhotoRepository;
+import com.github.agroscienceteam.imagemanager.domain.photo.PhotoRepository;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -27,24 +27,26 @@ public class TopicsInitializer implements CommandLineRunner {
   private final AdminClient adminClient;
   @NonNull
   private final PhotoRepository repo;
-  @Value("${app.partitions}")
+  @Value("${kafka.partitions}")
   private int partitions;
-  @Value("${app.replicas}")
+  @Value("${kafka.replicas}")
   private short replicas;
+  private final TopicsConfig topicsConf;
 
   @Override
   public void run(String... args) {
     createTopicsIfNotExist();
   }
 
-  @SneakyThrows
+
   private void createTopicsIfNotExist() {
     log.info("CREATING_TOPICS_WITH: {}, {}", partitions, replicas);
     try {
       ListTopicsResult listTopicsResult = adminClient.listTopics();
       Set<String> existingTopics = listTopicsResult.names().get();
-      List<String> topics = repo.findAllIndexes();
+      List<String> topics = repo.findAllIndexes().stream().flatMap(ign -> topicsConf.getTopics().stream()).toList();
       List<NewTopic> newTopics = new LinkedList<>();
+      log.info("TRY_TO_CREATE: {}", topics);
       for (String topic : topics) {
         if (!existingTopics.contains(topic)) {
           newTopics.add(new NewTopic(topic, partitions, replicas));

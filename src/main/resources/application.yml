@@ -34,13 +34,18 @@ springdoc:
   swagger-ui:
     path: /docs
 
-app:
-  new-photos:
-    name: ${NEW_PHOTOS:new.photos}
-    group-id: ${NEW_PHOTOS_GROUP_ID:new.photos.group.id}
-  workers-results:
-    name: ${WORKERS_RESULTS:workers.results}
-    group-id: ${WORKERS_RESULTS_GROUP_ID:workers.results.group.id}
+kafka:
+  topics:
+    new-photos:
+      name: ${NEW_PHOTOS:new.photos}
+      groupId: ${NEW_PHOTOS_GROUP_ID:new.photos.group.id}
+      dlq: ${NEW_PHOTOS_DLQ:new.photos.dlq}
+    workers-results:
+      name: ${WORKERS_RESULTS:workers.results}
+      groupId: ${WORKERS_RESULTS_GROUP_ID:workers.results.group.id}
+      dlq: ${WORKERS_RESULTS_DLQ:workers.results.dlq}
+    audit:
+      name: ${AUDIT_ERROR:agroscienceteam.audit.messages}
 
   partitions: ${PARTITIONS:1}
   replicas: ${REPLICAS:1}
