@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PhotoControllerAuditor extends BasicAuditor {
+
   public PhotoControllerAuditor(KafkaTemplate<String, String> producer,
                                 ObjectMapper mapper,
                                 TopicsConfig conf) {
@@ -27,4 +28,5 @@ public class PhotoControllerAuditor extends BasicAuditor {
     super.auditError(jp, e);
     throw new UIException(e);
   }
+
 }

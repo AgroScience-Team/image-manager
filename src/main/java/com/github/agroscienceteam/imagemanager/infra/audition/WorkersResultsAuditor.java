@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class WorkersResultsAuditor extends ListenerAuditor<ConsumerRecord<String, String>> {
+
   protected WorkersResultsAuditor(KafkaTemplate<String, String> producer,
                                   ObjectMapper mapper,
                                   TopicsConfig conf) {
