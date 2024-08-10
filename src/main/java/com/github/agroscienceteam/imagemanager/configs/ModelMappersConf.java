@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ModelMapperConf {
+public class ModelMappersConf {
 
   @Bean
   public ModelMapper modelMapper() {

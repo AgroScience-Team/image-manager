@@ -1,6 +1,7 @@
-package com.github.agroscienceteam.imagemanager.domain;
+package com.github.agroscienceteam.imagemanager.domain.photo;
 
 import com.github.agroscienceteam.imagemanager.configs.annotations.Command;
+import com.github.agroscienceteam.imagemanager.domain.EventSender;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

@@ -1,4 +1,4 @@
-package com.github.agroscienceteam.imagemanager.domain;
+package com.github.agroscienceteam.imagemanager.domain.photo;
 
 @FunctionalInterface
 public interface PhotoDistributor {

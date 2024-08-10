@@ -2,15 +2,18 @@ package com.github.agroscienceteam.imagemanager.configs;
 
 import java.util.Properties;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
-import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.listener.DefaultErrorHandler;
+import org.springframework.util.backoff.FixedBackOff;
 
 @Configuration
 @Data
+@Slf4j
 public class KafkaConf {
 
   @Value("${spring.kafka.bootstrap-servers}")
@@ -37,19 +40,8 @@ public class KafkaConf {
   }
 
   @Bean
-  public NewTopic newPhotos(
-          final @Value("${app.new-photos.name}") String topic,
-          final @Value("${app.partitions}") int partitions,
-          final @Value("${app.replicas}") short replicas) {
-    return new NewTopic(topic, partitions, replicas);
-  }
-
-  @Bean
-  public NewTopic workersResults(
-          final @Value("${app.workers-results.name}") String topic,
-          final @Value("${app.partitions}") int partitions,
-          final @Value("${app.replicas}") short replicas) {
-    return new NewTopic(topic, partitions, replicas);
+  public DefaultErrorHandler defaultErrorHandler() {
+    return new DefaultErrorHandler(new FixedBackOff(5000L, 1L));
   }
 
 }
