@@ -22,9 +22,6 @@ spring.kafka:
   properties:
     sasl:
       mechanism: PLAIN
-  listener:
-    retry:
-      enabled: false
 
   jaas:
     enabled: ${KAFKA_JAAS_ENABLED:true}
