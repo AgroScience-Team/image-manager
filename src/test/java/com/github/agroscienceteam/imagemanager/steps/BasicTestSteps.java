@@ -6,14 +6,13 @@ import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import com.github.agroscienceteam.imagemanager.domain.PhotoRepository;
-import com.github.agroscienceteam.imagemanager.infra.input.PhotoController;
+import com.github.agroscienceteam.imagemanager.domain.photo.PhotoRepository;
 import com.github.agroscienceteam.imagemanager.listeners.TestListener;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.modelmapper.ModelMapper;
@@ -24,7 +23,7 @@ public class BasicTestSteps {
 
   private final KafkaTemplate<String, String> producer;
   private final PhotoRepository repo;
-  private final List<TestListener> listeners;
+  private final Map<String, TestListener> listeners;
   private final TestRepo testRepo;
   private final ModelMapper mapper;
 
@@ -40,32 +39,41 @@ public class BasicTestSteps {
   }
 
   @SneakyThrows
-  @Then("Workers kafka topics receives message with key {string} in {long} millis")
-  public void receiveMessages(String expectedKey, long time, String expectedValue) {
-    assertEquals("Number or indexes in DB and Initializer not equals",
-            repo.findAllIndexes().size(),
-            listeners.size()
-    );
-    listeners.forEach(l -> await()
-            .atMost(time, MILLISECONDS)
-            .untilAsserted(() -> {
-                      var message = l.getMessage(100);
-                      assertNotNull(message);
-                      assertEquals(expectedKey, message.key());
-                      assertEquals(expectedValue, message.value());
-                    }
-            ));
-  }
-
-  @SneakyThrows
   @And("Table {string} receive data in {long} millis")
-  public void dbTest(String tableName, long time,  DataTable dt) {
+  public void dbTest(String tableName, long time, DataTable dt) {
     var expected = dt.asMaps().stream().map(m -> mapper.map(m, tables.get(tableName).getRecordType())).toList();
     await().atMost(time, MILLISECONDS)
             .untilAsserted(() -> {
               var actual = testRepo.getData(tableName);
               assertEquals(expected, actual);
             });
+  }
+
+  @SneakyThrows
+  @Then("Kafka topic {string} receives message with key {string} in {long} millis")
+  public void topicReceivesMessage(String topic, String expectedKey, long time, String expectedValue) {
+    assertListener(topic, expectedKey, time, expectedValue);
+  }
+
+  @SneakyThrows
+  @Then("Kafka topic {string} receives audit message with key {string} in {long} millis")
+  public void topicReceivesMessage2(String topic, String expectedKey, long time) {
+    assertListener(topic, expectedKey, time, null);
+  }
+
+  private void assertListener(String topic, String expectedKey, long time, String expectedValue) {
+    TestListener listener = listeners.get(topic);
+    await().atMost(time, MILLISECONDS).untilAsserted(() -> {
+              var message = listener.getMessage(100);
+              assertNotNull(message);
+              if (expectedKey != null) {
+                assertEquals(expectedKey, message.key());
+              }
+              if (expectedValue != null) {
+                assertEquals(expectedValue, message.value());
+              }
+            }
+    );
   }
 
 }

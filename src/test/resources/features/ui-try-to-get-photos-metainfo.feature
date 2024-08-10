@@ -68,3 +68,5 @@ Feature: ui-try-to-get-photos-metainfo
       }
     ]
     """
+
+    Then Kafka topic "agroscienceteam.audit.messages" receives audit message with key "SUCCESS" in 3000 millis

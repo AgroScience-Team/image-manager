@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "test")
 public class Initializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-  List<String> topics = List.of("ndvi");
+  List<String> topics = List.of("ndvi", "image-manager.audit.error", "agroscienceteam.audit.messages");
 
   @Override
   public void initialize(@NonNull GenericApplicationContext context) {
@@ -24,7 +24,7 @@ public class Initializer implements ApplicationContextInitializer<GenericApplica
   }
 
   private void registerTestListener(GenericApplicationContext context, String topic) {
-    context.registerBean(topic + "Listener", TestListener.class, () -> new TestListener(topic));
+    context.registerBean(topic, TestListener.class, () -> new TestListener(topic));
   }
 
 }
