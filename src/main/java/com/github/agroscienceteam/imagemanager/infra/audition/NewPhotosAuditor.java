@@ -1,7 +1,6 @@
 package com.github.agroscienceteam.imagemanager.infra.audition;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.agroscienceteam.imagemanager.configs.TopicsConfig;
 import com.github.agroscienceteam.imagemanager.infra.input.NewPhotoListener;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -18,10 +17,8 @@ public class NewPhotosAuditor extends ListenerAuditor<String> {
     producer.send(dlqTopic, getMessage(jp));
   }
 
-  protected NewPhotosAuditor(KafkaTemplate<String, String> producer,
-                             ObjectMapper mapper,
-                             TopicsConfig conf) {
-    super(conf.getTopic("audit"), producer, mapper, conf.getDLQ("new-photos"));
+  protected NewPhotosAuditor(KafkaTemplate<String, String> producer, ObjectMapper mapper) {
+    super(producer, mapper, "agro.new.photos.dlq");
     log.info("Start NewPhotosAuditor with {}, {}", this.auditTopic, this.dlqTopic);
   }
 

@@ -1,5 +1,6 @@
 package com.github.agroscienceteam.imagemanager.steps;
 
+import static com.github.agroscienceteam.imagemanager.domain.photo.IndexesConstants.INDEXES;
 import static java.util.stream.Collectors.toMap;
 
 import com.github.agroscienceteam.imagemanager.listeners.TestListener;
@@ -9,12 +10,10 @@ import io.cucumber.java.en.Given;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class BackgroundSteps {
 
-  @NonNull
   @Autowired
   private TestRepo repo;
 
@@ -34,6 +33,13 @@ public class BackgroundSteps {
   public void dbTableContainsData(String tableName, DataTable dt) {
     repo.delete(tableName);
     repo.save(dt.asMaps(), tableName);
+  }
+
+  @Given("The following indexes exist:")
+  public void thereExistTheFollowingIndexes(List<String> indexes) {
+    INDEXES.clear();
+
+    INDEXES.addAll(indexes);
   }
 
   @Autowired

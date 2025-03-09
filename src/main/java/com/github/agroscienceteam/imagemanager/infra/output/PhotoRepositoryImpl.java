@@ -1,67 +1,95 @@
 package com.github.agroscienceteam.imagemanager.infra.output;
 
 
+import static asavershin.generated.package_.Tables.JOB_UUID_REGISTRY;
 import static asavershin.generated.package_.Tables.PHOTOS;
-import static asavershin.generated.package_.Tables.PHOTOS_INDEXES;
-import static asavershin.generated.package_.tables.Indexes.INDEXES;
+import static asavershin.generated.package_.Tables.WORKERS_RESULTS;
 
-import com.github.agroscienceteam.imagemanager.domain.photo.Photo;
 import com.github.agroscienceteam.imagemanager.domain.photo.PhotoRepository;
-import com.github.agroscienceteam.imagemanager.domain.photo.PhotoWithProcessedPhotos;
-import com.github.agroscienceteam.imagemanager.domain.photo.ProcessedPhoto;
+import com.github.agroscienceteam.imagemanager.domain.photo.PhotoWithWorkersResults;
+import com.github.agroscienceteam.imagemanager.domain.photo.WorkerResult;
 import com.github.agroscienceteam.imagemanager.infra.mappers.CustomPhotoMapper;
+import com.github.agroscienceteam.imagemanager.infra.mappers.DbMapper;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
-import lombok.NonNull;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.jooq.TableRecord;
-import org.jooq.impl.TableImpl;
-import org.modelmapper.ModelMapper;
+import org.jooq.impl.DefaultDSLContext;
 import org.springframework.stereotype.Repository;
+
 
 @Repository
 @RequiredArgsConstructor
 public class PhotoRepositoryImpl implements PhotoRepository {
 
-  @NonNull
   private final DSLContext dsl;
-  @NonNull
-  private final ModelMapper mapper;
-  @NonNull
   private final CustomPhotoMapper customMapper;
+  private final DefaultDSLContext dslContext;
+  private final DbMapper dbMapper;
 
   @Override
-  public List<PhotoWithProcessedPhotos> findByFieldId(@NonNull Long fieldId,
-                                                      @NonNull LocalDate from,
-                                                      @NonNull LocalDate to) {
-    return customMapper.map(dsl.select(
-                    PHOTOS.FIELD_ID,
-                    PHOTOS.PHOTO_DATE,
-                    PHOTOS.PHOTO_EXTENSION
-            ).select(PHOTOS_INDEXES.fields())
-            .from(PHOTOS)
-            .leftJoin(PHOTOS_INDEXES)
-            .on(PHOTOS.PHOTO_ID.eq(PHOTOS_INDEXES.PHOTO_ID))
-            .where(PHOTOS.FIELD_ID.eq(fieldId).and(PHOTOS.PHOTO_DATE.between(from, to)))
-            .orderBy(PHOTOS.PHOTO_DATE.desc())
-            .fetch());
-  }
-
-  private static final Map<Class<?>, TableImpl<? extends TableRecord<?>>> tables = Map.of(
-          Photo.class, PHOTOS,
-          ProcessedPhoto.class, PHOTOS_INDEXES
-  );
-
-  @Override
-  public <T> void save(T entity) {
-    dsl.executeInsert(mapper.map(entity, tables.get(entity.getClass()).getType()));
+  public List<PhotoWithWorkersResults> findByFieldId(final UUID contourId,
+                                                     final LocalDate from,
+                                                     final LocalDate to) {
+    return customMapper.map(
+            dsl.select(
+                            PHOTOS.CONTOUR_ID,
+                            PHOTOS.DATE,
+                            PHOTOS.EXTENSION
+                    ).select(WORKERS_RESULTS.fields())
+                    .from(PHOTOS)
+                    .leftJoin(WORKERS_RESULTS)
+                    .on(PHOTOS.ID.eq(WORKERS_RESULTS.PHOTO_ID))
+                    .where(PHOTOS.CONTOUR_ID.eq(contourId).and(PHOTOS.DATE.between(from, to)))
+                    .orderBy(PHOTOS.DATE.desc())
+                    .fetch()
+    );
   }
 
   @Override
-  public @NonNull List<String> findAllIndexes() {
-    return dsl.select().from(INDEXES).fetch(INDEXES.INDEX_NAME, String.class);
+  public WorkerResult find(UUID photoId, String type) {
+    return dsl.select(WORKERS_RESULTS.fields())
+            .from(WORKERS_RESULTS)
+            .where(WORKERS_RESULTS.PHOTO_ID.eq(photoId).and(WORKERS_RESULTS.TYPE.eq(type)))
+            .fetchOneInto(WorkerResult.class);
+  }
+
+  @Override
+  public UUID generateJobId() {
+    UUID jobId;
+    do {
+      jobId = UUID.randomUUID();
+    } while (jobIdExists(jobId));
+
+    dsl.insertInto(JOB_UUID_REGISTRY)
+            .set(JOB_UUID_REGISTRY.JOB_ID, jobId)
+            .execute();
+
+    return jobId;
+  }
+
+  @Override
+  public void save(Object entity) {
+    dsl.executeInsert((TableRecord<?>) entity);
+  }
+
+  @Override
+  public void save(WorkerResult workerResult) {
+    var map = dbMapper.map(workerResult).intoMap();
+    map.remove("id");
+
+    dslContext.insertInto(WORKERS_RESULTS)
+            .set(map)
+            .execute();
+  }
+
+  private boolean jobIdExists(UUID jobId) {
+    return dsl.fetchExists(
+            dsl.selectFrom(JOB_UUID_REGISTRY)
+                    .where(JOB_UUID_REGISTRY.JOB_ID.eq(jobId))
+    );
   }
 
 }

@@ -17,7 +17,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 @Slf4j
 public abstract class BasicAuditor implements Auditor {
 
-  protected final String auditTopic;
+  protected final String auditTopic = "agro.audit.messages";
   protected final KafkaTemplate<String, String> producer;
   protected final ObjectMapper mapper;
 

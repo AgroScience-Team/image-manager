@@ -11,10 +11,6 @@
 или [AuditEntityWithResult](src/main/java/com/github/agroscienceteam/imagemanager/domain/audition/AuditEntityWithResult.java).  
 В случае ошибки идёт аудит в сключём ERROR и телом [ErrorAudit](src/main/java/com/github/agroscienceteam/imagemanager/domain/audition/ErrorAudit.java).  
 В случае возникновения ошибки во время аудита предусмотрен [FatalAudit](src/main/java/com/github/agroscienceteam/imagemanager/domain/audition/FatalAudit.java).  
-Топик для аудита "agroscienceteam.audit.messages".  
+Топик для аудита "agro.audit.messages".  
 При ошибках в слушателях помимо аудита идёт запись сообщения, которое вызвало ошибку, в топик вида исходныйТопик.dlq.
-
-# Важное
-При последующем добавлении нового индекса в таблицу [indexes](src/main/resources/liquibase/1.0.0/2024-07-31_01-create-tables.sql)  
-нужно продублировать его в списке класса [Initializer](src/test/java/com/github/agroscienceteam/imagemanager/Initializer.java). 
 

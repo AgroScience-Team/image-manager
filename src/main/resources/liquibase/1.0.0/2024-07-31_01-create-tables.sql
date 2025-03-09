@@ -1,45 +1,50 @@
--- Таблица для хранения информации о фотографиях
 CREATE TABLE photos
 (
-    photo_id        UUID PRIMARY KEY,
-    field_id        BIGINT  NOT NULL,
-    photo_date      DATE    NOT NULL,
-    photo_extension VARCHAR NOT NULL
+  id         UUID PRIMARY KEY,
+  contour_id UUID    NOT NULL,
+  date       DATE    NOT NULL,
+  extension  VARCHAR NOT NULL
 );
 
 COMMENT ON TABLE photos IS 'Таблица для хранения информации о фотографиях';
-COMMENT ON COLUMN photos.photo_id IS 'Уникальный идентификатор фотографии';
-COMMENT ON COLUMN photos.field_id IS 'Идентификатор поля, к которому относится фотография';
-COMMENT ON COLUMN photos.photo_date IS 'Дата, когда была сделана фотография';
-COMMENT ON COLUMN photos.photo_extension IS 'Расширение снимка';
 
-CREATE TABLE indexes
+COMMENT ON COLUMN photos.id IS 'Уникальный идентификатор фотографии';
+COMMENT ON COLUMN photos.contour_id IS 'Идентификатор контура, к которому относится фотография';
+COMMENT ON COLUMN photos.date IS 'Дата, когда была сделана фотография';
+COMMENT ON COLUMN photos.extension IS 'Расширение снимка';
+
+CREATE TABLE workers_results
 (
-    index_name VARCHAR PRIMARY KEY
+  id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  job_id      UUID NOT NULL,
+  worker_name varchar,
+  photo_id    UUID,
+  type        VARCHAR,
+  path        VARCHAR,
+  success     BOOL,
+  CONSTRAINT fk_workers_results_photos
+    FOREIGN KEY (photo_id)
+      REFERENCES photos (id) ON UPDATE RESTRICT ON DELETE SET NULL
 );
 
-COMMENT ON TABLE indexes IS 'Таблица для хранения индексов для фотографий';
-COMMENT ON COLUMN indexes.index_name IS 'Название индекса';
+COMMENT ON TABLE workers_results IS 'Таблица для many-to-many связи';
 
-CREATE TABLE photos_indexes
+COMMENT ON COLUMN workers_results.id IS 'Служебное поле, идентификатор';
+COMMENT ON COLUMN workers_results.job_id IS 'Идентификатор задачи';
+COMMENT ON COLUMN workers_results.id IS 'Имя воркера';
+COMMENT ON COLUMN workers_results.photo_id IS 'Ссылка на фотографию';
+COMMENT ON COLUMN workers_results.type IS 'Название индекса';
+COMMENT ON COLUMN workers_results.path IS 'Путь до файла в s3';
+COMMENT ON COLUMN workers_results.success IS 'Успешная или нет попытка';
+
+
+CREATE TABLE job_uuid_registry
 (
-    photo_id   UUID,
-    index_name VARCHAR,
-    result     VARCHAR NOT NULL,
-    extension  VARCHAR NOT NULL,
-    CONSTRAINT fk_photos_indexes_photos
-        FOREIGN KEY (photo_id)
-            REFERENCES photos (photo_id) ON UPDATE RESTRICT ON DELETE SET NULL,
-    CONSTRAINT fk_photo_indexes_indexes
-        FOREIGN KEY (index_name)
-            REFERENCES indexes (index_name) ON UPDATE RESTRICT ON DELETE SET NULL,
-    CONSTRAINT unique_photos_indexes UNIQUE (photo_id, index_name, result, extension)
+  job_id UUID PRIMARY KEY
 );
 
-COMMENT ON TABLE photos_indexes IS 'Таблица для many-to-many связи';
-COMMENT ON COLUMN photos_indexes.photo_id IS 'Ссылка на фотографию';
-COMMENT ON COLUMN photos_indexes.index_name IS 'Название индекса';
-COMMENT ON COLUMN photos_indexes.result IS 'Результат подсчёта индекса: успешный или завершён с ошибкой';
-COMMENT ON COLUMN photos_indexes.extension IS 'Расширение подсчитанного индекса, сохранённого в s3';
+COMMENT ON TABLE job_uuid_registry IS 'Служебная таблица для хранения job_id';
+
+COMMENT ON COLUMN job_uuid_registry.job_id IS 'Идентификатор задачи из таблицы workers_results';
 
 commit;
