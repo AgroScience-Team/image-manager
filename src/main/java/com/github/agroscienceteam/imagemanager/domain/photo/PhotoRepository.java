@@ -2,13 +2,18 @@ package com.github.agroscienceteam.imagemanager.domain.photo;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 public interface PhotoRepository {
 
-  <T> void save(T photo);
+  void save(Object object);
 
-  List<PhotoWithProcessedPhotos> findByFieldId(Long fieldId, LocalDate pageNumber, LocalDate pageSize);
+  void save(WorkerResult workerResult);
 
-  List<String> findAllIndexes();
+  List<PhotoWithWorkersResults> findByFieldId(UUID contourId, LocalDate pageNumber, LocalDate pageSize);
+
+  WorkerResult find(UUID photoId, String type);
+
+  UUID generateJobId();
 
 }

@@ -12,9 +12,8 @@ public abstract class ListenerAuditor<T> extends BasicAuditor {
     return (T) jp.getArgs()[0];
   }
 
-  protected ListenerAuditor(String auditTopic, KafkaTemplate<String, String> producer, ObjectMapper mapper,
-                            String dlqTopic) {
-    super(auditTopic, producer, mapper);
+  protected ListenerAuditor(KafkaTemplate<String, String> producer, ObjectMapper mapper, String dlqTopic) {
+    super(producer, mapper);
     this.dlqTopic = dlqTopic;
   }
 

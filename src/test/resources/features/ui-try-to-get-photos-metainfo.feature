@@ -2,71 +2,79 @@
 Feature: ui-try-to-get-photos-metainfo
 
   Background:
-    Given Db table "indexes" contains data:
-      | indexName |
-      | ndvi      |
-      | dvi       |
+    Given The following indexes exist:
+      | ndvi |
+      | dvi  |
     And Db table "photos" contains data:
-      | photoId                              | fieldId | photoDate  | photoExtension |
-      | f128f7c6-1972-4a15-99b7-bca1e1675fdf | 0       | 2024-08-02 | TIFF           |
-      | f128f6c6-1972-4a15-99b7-bca1e1675fdf | 0       | 2024-08-03 | TIFF           |
-    And Db table "photos_indexes" contains data:
-      | photoId                              | indexName | result  | extension |
-      | f128f7c6-1972-4a15-99b7-bca1e1675fdf | ndvi      | success | TIFF      |
-      | f128f6c6-1972-4a15-99b7-bca1e1675fdf | ndvi      | success | TIFF      |
-      | f128f7c6-1972-4a15-99b7-bca1e1675fdf | dvi       | fail    | TIFF      |
-      | f128f6c6-1972-4a15-99b7-bca1e1675fdf | dvi       | fail    | TIFF      |
+      | id                                   | contourId                            | date       | extension |
+      | 00000000-0000-0000-0000-000000000001 | 00000000-0000-0000-0000-000000000001 | 2024-08-02 | tiff      |
+      | 00000000-0000-0000-0000-000000000002 | 00000000-0000-0000-0000-000000000001 | 2024-08-03 | tiff      |
+    And Db table "workers_results" contains data:
+      | id                                   | jobId                                | workerName | photoId                              | type | path      | success |
+      | 00000000-0000-0000-0000-000000000001 | 00000000-0000-0000-0000-000000000001 | ndvi       | 00000000-0000-0000-0000-000000000001 | ndvi | some/path | true    |
+      | 00000000-0000-0000-0000-000000000002 | 00000000-0000-0000-0000-000000000002 | ndvi       | 00000000-0000-0000-0000-000000000002 | ndvi | some/path | true    |
+      | 00000000-0000-0000-0000-000000000003 | 00000000-0000-0000-0000-000000000003 | dvi        | 00000000-0000-0000-0000-000000000001 | dvi  |           | false   |
+      | 00000000-0000-0000-0000-000000000004 | 00000000-0000-0000-0000-000000000004 | dvi        | 00000000-0000-0000-0000-000000000002 | dvi  |           | false   |
+    And Kafka topic "agro.audit.messages" is clear
 
   Scenario: UI try to get photos metainfo
-    When UI send get request with url: "http://localhost:8083/image-manager/0?from=2000-01-01&to=2024-12-12"
+    When UI send get request with url: "http://localhost:8083/image-manager/contours/00000000-0000-0000-0000-000000000001/photos?from=2000-01-01&to=2024-12-12"
     Then UI receive response
     """
     [
       {
-        "photo": {
-          "photoId":"f128f6c6-1972-4a15-99b7-bca1e1675fdf",
-          "fieldId":0,
-          "photoDate":"2024-08-03",
-          "photoExtension":"TIFF"
-        },
-        "processedPhotos": [
+        "id": "00000000-0000-0000-0000-000000000002",
+        "contourId": "00000000-0000-0000-0000-000000000001",
+        "date": "2024-08-03",
+        "extension": "tiff",
+        "workerResults": [
           {
-            "indexName":"ndvi",
-            "photoId":"f128f6c6-1972-4a15-99b7-bca1e1675fdf",
-            "result":"success",
-            "extension":"TIFF"
+            "id": "00000000-0000-0000-0000-000000000002",
+            "photoId": "00000000-0000-0000-0000-000000000002",
+            "jobId": "00000000-0000-0000-0000-000000000002",
+            "workerName": "ndvi",
+            "type": "ndvi",
+            "path": "some/path",
+            "success": true
           },
           {
-            "indexName":"dvi",
-            "photoId":"f128f6c6-1972-4a15-99b7-bca1e1675fdf",
-            "result":"fail",
-            "extension":"TIFF"
+            "id": "00000000-0000-0000-0000-000000000004",
+            "photoId": "00000000-0000-0000-0000-000000000002",
+            "jobId": "00000000-0000-0000-0000-000000000004",
+            "workerName": "dvi",
+            "type": "dvi",
+            "path": null,
+            "success": false
           }
         ]
       },
       {
-        "photo": {
-          "photoId":"f128f7c6-1972-4a15-99b7-bca1e1675fdf",
-          "fieldId":0,
-          "photoDate":"2024-08-02",
-          "photoExtension":"TIFF"
-        },
-        "processedPhotos": [
+        "id": "00000000-0000-0000-0000-000000000001",
+        "contourId": "00000000-0000-0000-0000-000000000001",
+        "date": "2024-08-02",
+        "extension": "tiff",
+        "workerResults": [
           {
-            "indexName":"ndvi",
-            "photoId":"f128f7c6-1972-4a15-99b7-bca1e1675fdf",
-            "result":"success",
-            "extension":"TIFF"
+            "id": "00000000-0000-0000-0000-000000000001",
+            "photoId": "00000000-0000-0000-0000-000000000001",
+            "jobId": "00000000-0000-0000-0000-000000000001",
+            "workerName": "ndvi",
+            "type": "ndvi",
+            "path": "some/path",
+            "success": true
           },
           {
-            "indexName":"dvi",
-            "photoId":"f128f7c6-1972-4a15-99b7-bca1e1675fdf",
-            "result":"fail",
-            "extension":"TIFF"
+            "id": "00000000-0000-0000-0000-000000000003",
+            "photoId": "00000000-0000-0000-0000-000000000001",
+            "jobId": "00000000-0000-0000-0000-000000000003",
+            "workerName": "dvi",
+            "type": "dvi",
+            "path": null,
+            "success": false
           }
         ]
       }
     ]
     """
 
-    Then Kafka topic "agroscienceteam.audit.messages" receives audit message with key "SUCCESS" in 3000 millis
+    Then Kafka topic "agro.audit.messages" receives audit message with key "SUCCESS" in 3000 millis

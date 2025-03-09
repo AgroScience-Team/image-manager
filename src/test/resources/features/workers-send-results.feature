@@ -3,36 +3,44 @@ Feature: workers-send-results
 
   Scenario: Receive and save processed photos metainfo
     Given Table "photos" is empty
+    And Table "job_uuid_registry" is empty
     And Db table "photos" contains data:
-      | photoId                              | fieldId | photoDate  | photoExtension |
-      | f128f7c6-1972-4a15-99b7-bca1e1675fdf | 0       | 2024-08-02 | TIFF           |
-    And Table "photos_indexes" is empty
-    And Db table "indexes" contains data:
-      | indexName |
-      | ndvi      |
-    When External system send message in topic "workers.results" with key "ndvi"
+      | id                                   | contourId                            | date       | extension |
+      | 00000000-0000-0000-0000-000000000001 | 00000000-0000-0000-0000-000000000001 | 2024-08-02 | tiff      |
+    And Table "workers_results" is empty
+    And The following indexes exist:
+      | ndvi |
+      | dvi  |
+
+    When External system send message in topic "agro.workers.results"
     """
     {
-      "photoId": "f128f7c6-1972-4a15-99b7-bca1e1675fdf",
-      "result": "success",
-      "extension": "TIFF"
+      "photoId": "00000000-0000-0000-0000-000000000001",
+      "jobId": "00000000-0000-0000-0000-000000000001",
+      "workerName": "ndvi",
+      "path": "some/path",
+      "success": "true",
+      "type": "ndvi"
     }
     """
 
-    Then Table "photos_indexes" receive data in 3000 millis
-      | photoId                              | indexName | result  | extension |
-      | f128f7c6-1972-4a15-99b7-bca1e1675fdf | ndvi      | success | TIFF      |
+    Then Table "workers_results" receive data in 3000 millis
+      | photo_id                             | job_id                               | worker_name | type | success | path      |
+      | 00000000-0000-0000-0000-000000000001 | 00000000-0000-0000-0000-000000000001 | ndvi        | ndvi | true    | some/path |
 
-    Then Kafka topic "agroscienceteam.audit.messages" receives audit message with key "SUCCESS" in 3000 millis
+    Then Kafka topic "agro.audit.messages" receives audit message with key "SUCCESS" in 3000 millis
 
   Scenario: Receive duplicate message and audit error
-    When External system send message in topic "workers.results" with key "ndvi"
+    When External system send message in topic "agro.workers.results"
     """
     {
-      "photoId": "f128f7c6-1972-4a15-99b7-bca1e1675fdf",
-      "result": "success",
-      "extension": "TIFF"
+      "photoId": "00000000-0000-0000-0000-000000000001",
+      "jobId": ""00000000-0000-0000-0000-000000000001",
+      "workerName": "ndvi",
+      "path": "some/path",
+      "success": "true",
+      "type": "ndvi"
     }
     """
 
-    Then Kafka topic "agroscienceteam.audit.messages" receives audit message with key "ERROR" in 10000 millis
+    Then Kafka topic "agro.audit.messages" receives audit message with key "ERROR" in 10000 millis

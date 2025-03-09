@@ -1,8 +1,8 @@
 package com.github.agroscienceteam.imagemanager.steps;
 
-import static asavershin.generated.package_.Tables.INDEXES;
+import static asavershin.generated.package_.Tables.JOB_UUID_REGISTRY;
 import static asavershin.generated.package_.Tables.PHOTOS;
-import static asavershin.generated.package_.Tables.PHOTOS_INDEXES;
+import static asavershin.generated.package_.Tables.WORKERS_RESULTS;
 
 import java.util.Map;
 import org.jooq.TableRecord;
@@ -12,8 +12,8 @@ public class Constants {
 
   public static final Map<String, TableImpl<? extends TableRecord<?>>> tables = Map.of(
           "photos", PHOTOS,
-          "photos_indexes", PHOTOS_INDEXES,
-          "indexes", INDEXES
+          "workers_results", WORKERS_RESULTS,
+          "job_uuid_registry", JOB_UUID_REGISTRY
   );
 
 }

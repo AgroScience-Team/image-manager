@@ -17,6 +17,9 @@ spring.kafka:
     value-serializer: org.apache.kafka.common.serialization.StringSerializer
   consumer:
     auto-offset-reset: earliest
+    key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    group-id: ${IMAGE_MANAGER_GROUP_ID:image_manager_group}
   security:
     protocol: ${KAFKA_SECURITY_PROTOCOL:SASL_PLAINTEXT}
   properties:
@@ -33,19 +36,3 @@ spring.kafka:
 springdoc:
   swagger-ui:
     path: /docs
-
-kafka:
-  topics:
-    new-photos:
-      name: ${NEW_PHOTOS:new.photos}
-      groupId: ${NEW_PHOTOS_GROUP_ID:new.photos.group.id}
-      dlq: ${NEW_PHOTOS_DLQ:new.photos.dlq}
-    workers-results:
-      name: ${WORKERS_RESULTS:workers.results}
-      groupId: ${WORKERS_RESULTS_GROUP_ID:workers.results.group.id}
-      dlq: ${WORKERS_RESULTS_DLQ:workers.results.dlq}
-    audit:
-      name: ${AUDIT_ERROR:agroscienceteam.audit.messages}
-
-  partitions: ${PARTITIONS:1}
-  replicas: ${REPLICAS:1}

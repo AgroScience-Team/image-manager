@@ -2,12 +2,11 @@ package com.github.agroscienceteam.imagemanager.infra.input;
 
 import com.github.agroscienceteam.imagemanager.configs.annotations.Audit;
 import com.github.agroscienceteam.imagemanager.domain.photo.PhotoRepository;
-import com.github.agroscienceteam.imagemanager.domain.photo.PhotoWithProcessedPhotos;
+import com.github.agroscienceteam.imagemanager.domain.photo.PhotoWithWorkersResults;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.validation.constraints.Min;
 import java.time.LocalDate;
 import java.util.List;
-import lombok.NonNull;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,13 +22,15 @@ public class PhotoController {
   private final PhotoRepository repo;
 
 
-  @GetMapping("/{fieldId}")
+  @GetMapping("contours/{contourId}/photos")
   @Operation(description = "Получить метаинформацию снимков")
   @Audit
-  public List<PhotoWithProcessedPhotos> getPhotosMetaInfo(@NonNull final @PathVariable @Min(0) Long fieldId,
-                                                          @NonNull final @RequestParam LocalDate from,
-                                                          @NonNull final @RequestParam LocalDate to) {
-    return repo.findByFieldId(fieldId, from, to);
+  public List<PhotoWithWorkersResults> getPhotosMetaInfo(
+          final @PathVariable UUID contourId,
+          final @RequestParam LocalDate from,
+          final @RequestParam LocalDate to
+  ) {
+    return repo.findByFieldId(contourId, from, to);
   }
 
 }
