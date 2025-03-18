@@ -5,8 +5,8 @@ Feature: workers-send-results
     Given Table "photos" is empty
     And Table "job_uuid_registry" is empty
     And Db table "photos" contains data:
-      | id                                   | contourId                            | date       | extension |
-      | 00000000-0000-0000-0000-000000000001 | 00000000-0000-0000-0000-000000000001 | 2024-08-02 | tiff      |
+      | id                                   | contourId                            | date                      | extension |
+      | 00000000-0000-0000-0000-000000000001 | 00000000-0000-0000-0000-000000000001 | 2024-08-02T12:00:00+00:00 | tiff      |
     And Table "workers_results" is empty
     And The following indexes exist:
       | ndvi |
@@ -17,7 +17,7 @@ Feature: workers-send-results
     {
       "photoId": "00000000-0000-0000-0000-000000000001",
       "jobId": "00000000-0000-0000-0000-000000000001",
-      "workerName": "ndvi",
+      "workerName": "ndvi-worker",
       "path": "some/path",
       "success": "true",
       "type": "ndvi"
@@ -26,7 +26,7 @@ Feature: workers-send-results
 
     Then Table "workers_results" receive data in 3000 millis
       | photo_id                             | job_id                               | worker_name | type | success | path      |
-      | 00000000-0000-0000-0000-000000000001 | 00000000-0000-0000-0000-000000000001 | ndvi        | ndvi | true    | some/path |
+      | 00000000-0000-0000-0000-000000000001 | 00000000-0000-0000-0000-000000000001 | ndvi-worker | ndvi | true    | some/path |
 
     Then Kafka topic "agro.audit.messages" receives audit message with key "SUCCESS" in 3000 millis
 

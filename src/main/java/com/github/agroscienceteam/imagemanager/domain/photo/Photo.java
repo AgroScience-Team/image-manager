@@ -1,5 +1,8 @@
 package com.github.agroscienceteam.imagemanager.domain.photo;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 import lombok.Getter;
@@ -17,9 +20,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class Photo {
 
+  @JsonAlias({"photoId"})
+  @JsonProperty("id")
   private final UUID id;
   private final UUID contourId;
-  private final LocalDate date;
+  private final Instant date;
   private final String extension;
 
 }

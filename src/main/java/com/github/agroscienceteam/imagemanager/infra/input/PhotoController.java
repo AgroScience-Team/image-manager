@@ -4,7 +4,7 @@ import com.github.agroscienceteam.imagemanager.configs.annotations.Audit;
 import com.github.agroscienceteam.imagemanager.domain.photo.PhotoRepository;
 import com.github.agroscienceteam.imagemanager.domain.photo.PhotoWithWorkersResults;
 import io.swagger.v3.oas.annotations.Operation;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +27,8 @@ public class PhotoController {
   @Audit
   public List<PhotoWithWorkersResults> getPhotosMetaInfo(
           final @PathVariable UUID contourId,
-          final @RequestParam LocalDate from,
-          final @RequestParam LocalDate to
+          final @RequestParam Instant from,
+          final @RequestParam Instant to
   ) {
     return repo.findByFieldId(contourId, from, to);
   }

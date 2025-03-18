@@ -1,6 +1,9 @@
 package com.github.agroscienceteam.imagemanager.configs;
 
+import static java.time.OffsetDateTime.parse;
+
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.record.RecordModule;
@@ -14,7 +17,10 @@ public class ModelMapperConf {
   @Bean
   public ModelMapper modelMapper() {
     var mapper = new ModelMapper().registerModule(new RecordModule());
+
     mapper.addConverter(new StringToLocalDateConverter());
+    mapper.addConverter(new StringToOffsetDateTime());
+
     return mapper;
   }
 
@@ -27,6 +33,19 @@ public class ModelMapperConf {
         return null;
       }
       return LocalDate.parse(source);
+    }
+
+  }
+
+  private static class StringToOffsetDateTime implements Converter<String, OffsetDateTime> {
+
+    @Override
+    public OffsetDateTime convert(MappingContext<String, OffsetDateTime> context) {
+      String source = context.getSource();
+      if (source == null) {
+        return null;
+      }
+      return parse(source);
     }
 
   }
