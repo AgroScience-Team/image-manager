@@ -47,7 +47,7 @@ public class CustomPhotoMapper {
       result.add(new PhotoWithWorkersResults(
               firstRecord.get(WORKERS_RESULTS.PHOTO_ID),
               firstRecord.get(PHOTOS.CONTOUR_ID),
-              firstRecord.get(PHOTOS.DATE),
+              firstRecord.get(PHOTOS.DATE).toInstant(),
               firstRecord.get(PHOTOS.EXTENSION),
               workerResults
       ));

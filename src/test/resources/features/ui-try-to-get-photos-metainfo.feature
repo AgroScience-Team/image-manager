@@ -6,9 +6,9 @@ Feature: ui-try-to-get-photos-metainfo
       | ndvi |
       | dvi  |
     And Db table "photos" contains data:
-      | id                                   | contourId                            | date       | extension |
-      | 00000000-0000-0000-0000-000000000001 | 00000000-0000-0000-0000-000000000001 | 2024-08-02 | tiff      |
-      | 00000000-0000-0000-0000-000000000002 | 00000000-0000-0000-0000-000000000001 | 2024-08-03 | tiff      |
+      | id                                   | contourId                            | date                      | extension |
+      | 00000000-0000-0000-0000-000000000001 | 00000000-0000-0000-0000-000000000001 | 2024-08-02T12:00:00+00:00 | tiff      |
+      | 00000000-0000-0000-0000-000000000002 | 00000000-0000-0000-0000-000000000001 | 2024-08-03T12:00:00+00:00 | tiff      |
     And Db table "workers_results" contains data:
       | id                                   | jobId                                | workerName | photoId                              | type | path      | success |
       | 00000000-0000-0000-0000-000000000001 | 00000000-0000-0000-0000-000000000001 | ndvi       | 00000000-0000-0000-0000-000000000001 | ndvi | some/path | true    |
@@ -18,14 +18,14 @@ Feature: ui-try-to-get-photos-metainfo
     And Kafka topic "agro.audit.messages" is clear
 
   Scenario: UI try to get photos metainfo
-    When UI send get request with url: "http://localhost:8083/image-manager/contours/00000000-0000-0000-0000-000000000001/photos?from=2000-01-01&to=2024-12-12"
+    When UI send get request with url: "http://localhost:8083/image-manager/contours/00000000-0000-0000-0000-000000000001/photos?from=2000-01-01T00:00:00Z&to=2024-12-12T00:00:00Z"
     Then UI receive response
     """
     [
       {
         "id": "00000000-0000-0000-0000-000000000002",
         "contourId": "00000000-0000-0000-0000-000000000001",
-        "date": "2024-08-03",
+        "date": "2024-08-03T12:00:00Z",
         "extension": "tiff",
         "workerResults": [
           {
@@ -51,7 +51,7 @@ Feature: ui-try-to-get-photos-metainfo
       {
         "id": "00000000-0000-0000-0000-000000000001",
         "contourId": "00000000-0000-0000-0000-000000000001",
-        "date": "2024-08-02",
+        "date": "2024-08-02T12:00:00Z",
         "extension": "tiff",
         "workerResults": [
           {

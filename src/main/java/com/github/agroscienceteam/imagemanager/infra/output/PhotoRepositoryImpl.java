@@ -4,13 +4,15 @@ package com.github.agroscienceteam.imagemanager.infra.output;
 import static asavershin.generated.package_.Tables.JOB_UUID_REGISTRY;
 import static asavershin.generated.package_.Tables.PHOTOS;
 import static asavershin.generated.package_.Tables.WORKERS_RESULTS;
+import static java.time.OffsetDateTime.ofInstant;
+import static java.time.ZoneOffset.UTC;
 
 import com.github.agroscienceteam.imagemanager.domain.photo.PhotoRepository;
 import com.github.agroscienceteam.imagemanager.domain.photo.PhotoWithWorkersResults;
 import com.github.agroscienceteam.imagemanager.domain.photo.WorkerResult;
 import com.github.agroscienceteam.imagemanager.infra.mappers.CustomPhotoMapper;
 import com.github.agroscienceteam.imagemanager.infra.mappers.DbMapper;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -30,9 +32,11 @@ public class PhotoRepositoryImpl implements PhotoRepository {
   private final DbMapper dbMapper;
 
   @Override
-  public List<PhotoWithWorkersResults> findByFieldId(final UUID contourId,
-                                                     final LocalDate from,
-                                                     final LocalDate to) {
+  public List<PhotoWithWorkersResults> findByFieldId(
+          final UUID contourId,
+          final Instant from,
+          final Instant to
+  ) {
     return customMapper.map(
             dsl.select(
                             PHOTOS.CONTOUR_ID,
@@ -42,7 +46,9 @@ public class PhotoRepositoryImpl implements PhotoRepository {
                     .from(PHOTOS)
                     .leftJoin(WORKERS_RESULTS)
                     .on(PHOTOS.ID.eq(WORKERS_RESULTS.PHOTO_ID))
-                    .where(PHOTOS.CONTOUR_ID.eq(contourId).and(PHOTOS.DATE.between(from, to)))
+                    .where(PHOTOS.CONTOUR_ID.eq(contourId).and(PHOTOS.DATE.between(
+                            ofInstant(from, UTC), ofInstant(to, UTC)
+                    )))
                     .orderBy(PHOTOS.DATE.desc())
                     .fetch()
     );

@@ -1,9 +1,9 @@
 CREATE TABLE photos
 (
   id         UUID PRIMARY KEY,
-  contour_id UUID    NOT NULL,
-  date       DATE    NOT NULL,
-  extension  VARCHAR NOT NULL
+  contour_id UUID                     NOT NULL,
+  date       TIMESTAMP WITH TIME ZONE NOT NULL,
+  extension  VARCHAR                  NOT NULL
 );
 
 COMMENT ON TABLE photos IS 'Таблица для хранения информации о фотографиях';
