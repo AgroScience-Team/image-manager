@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/image-manager")
+@RequestMapping("/api/v1/image-manager")
 public class PhotoController {
 
   private final PhotoRepository repo;
