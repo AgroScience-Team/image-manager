@@ -18,7 +18,7 @@ Feature: ui-try-to-get-photos-metainfo
     And Kafka topic "agro.audit.messages" is clear
 
   Scenario: UI try to get photos metainfo
-    When UI send get request with url: "http://localhost:8083/image-manager/contours/00000000-0000-0000-0000-000000000001/photos?from=2000-01-01T00:00:00Z&to=2024-12-12T00:00:00Z"
+    When UI send get request with url: "http://localhost:8083/api/v1/image-manager/contours/00000000-0000-0000-0000-000000000001/photos?from=2000-01-01T00:00:00Z&to=2024-12-12T00:00:00Z"
     Then UI receive response
     """
     [
